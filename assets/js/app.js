@@ -468,7 +468,7 @@
       html:
         '<section class="bridge-page">' +
           '<a class="back-link" href="#/story/' + esc(story.id) + '">\u2190 Back to the story</a>' +
-          '<div class="bridge-page__head"><p class="eyebrow">Culture Bridge</p><h1>' + esc(story.title) + '</h1><p class="lede">Three steps: discover, understand, connect. Your answers stay on this device.</p></div>' +
+          '<div class="bridge-page__head"><p class="eyebrow">Culture Bridge</p><h1>' + esc(story.title) + '</h1><p class="lede">Three steps: discover, understand, connect. Your answers stay on this device. The story you are responding to is fictional demonstration content.</p></div>' +
           '<ol class="bridge-progress" aria-label="Bridge progress">' + progress + '</ol>' +
           '<div class="bridge-panel">' + body + '</div>' +
           '<p class="small bridge-page__foot">The Bridge is a proposed enhancement in the project report. It is implemented here as a working demonstration of the interaction, not a validated intervention.</p>' +
@@ -501,7 +501,7 @@
       title: "Culture atlas",
       html:
         '<section class="page-head"><p class="eyebrow">Places, not pins</p><h1>Culture atlas</h1>' +
-        '<p class="lede">A regional board instead of a geographic map. Precise pins imply that a practice belongs to an exact point on a map, which is rarely true and can expose contributors. This board is fully keyboard accessible and does not ask anyone to locate themselves.</p></section>' +
+        '<p class="lede">A regional board instead of a geographic map. Precise pins imply that a practice belongs to an exact point on a map, which is rarely true and can expose contributors. This board is fully keyboard accessible and does not ask anyone to locate themselves. Every story shown is fictional demonstration content.</p></section>' +
         '<div class="atlas">' +
           '<div class="atlas-board" role="group" aria-label="Regions with shared stories">' + cells + '</div>' +
           '<div class="atlas-side">' +
