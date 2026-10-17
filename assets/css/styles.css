@@ -381,6 +381,14 @@ main { position: relative; z-index: 1; display: block; }
 .tag--cream { background: #efe9dc; }
 .tag--outline { background: transparent; border: 1px solid var(--line-strong); color: var(--ink-soft); }
 .story-card__media .tag { position: absolute; left: 12px; bottom: 12px; }
+.demo-flag {
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  background: rgba(251, 244, 232, 0.95); border: 1px dashed rgba(46, 36, 32, 0.35);
+  color: var(--ink-soft); font-size: 0.62rem; font-weight: 650;
+  letter-spacing: 0.09em; text-transform: uppercase;
+  padding: 5px 9px; border-radius: 999px;
+}
+.tag--demo { background: transparent; border: 1px dashed var(--line-strong); color: var(--ink-soft); }
 .pill {
   display: inline-block; font-size: 0.7rem; font-weight: 650;
   letter-spacing: 0.07em; text-transform: uppercase;
@@ -502,6 +510,12 @@ select {
 .story__head h1 { margin-bottom: 0.28em; }
 .byline { font-size: 0.88rem; color: var(--ink-faint); margin-top: 18px; }
 .byline strong { color: var(--ink); font-weight: 600; }
+.demo-note {
+  margin: 14px 0 0; max-width: 68ch; padding: 10px 14px;
+  border-left: 3px solid var(--terracotta); background: rgba(243, 228, 207, 0.5);
+  font-size: 0.86rem; color: var(--ink-soft);
+}
+.demo-note strong { color: var(--ink); }
 
 .story__figure { margin: 30px 0 0; }
 .story__figure img {

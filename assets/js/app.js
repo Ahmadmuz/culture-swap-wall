@@ -151,6 +151,7 @@
         '<a class="story-card__link" href="#/story/' + esc(story.id) + '">' +
           '<div class="story-card__media">' +
             '<img src="assets/img/' + esc(story.image || categoryTile(story.category)) + '" alt="" width="640" height="420" loading="lazy">' +
+            '<span class="demo-flag">Fictional story</span>' +
             '<span class="tag tag--' + esc(cat.colour) + '">' + esc(cat.label) + '</span>' +
           '</div>' +
           '<div class="story-card__body">' +
@@ -349,10 +350,11 @@
         '<article class="story">' +
           '<a class="back-link" href="#/wall">\u2190 Back to the wall</a>' +
           '<header class="story__head">' +
-            '<p class="story__tags"><span class="tag tag--' + esc(cat.colour) + '">' + esc(cat.label) + '</span> <span class="tag tag--outline">' + esc(story.region) + '</span>' + (story.community ? ' <span class="pill pill--new">Community submission</span>' : '') + '</p>' +
+            '<p class="story__tags"><span class="tag tag--demo">Fictional story</span> <span class="tag tag--' + esc(cat.colour) + '">' + esc(cat.label) + '</span> <span class="tag tag--outline">' + esc(story.region) + '</span>' + (story.community ? ' <span class="pill pill--new">Community submission</span>' : '') + '</p>' +
             '<h1>' + esc(story.title) + '</h1>' +
             '<p class="lede">' + esc(story.summary) + '</p>' +
             '<p class="byline">Shared by <strong>' + esc(story.author) + '</strong> \u00b7 ' + esc(story.authorNote || "Demonstration author") + ' \u00b7 ' + esc(story.readingTime || "2 min") + ' read</p>' +
+            '<p class="demo-note"><strong>Fictional demonstration story.</strong> This was written for the prototype and is not a real person\u2019s account.</p>' +
           '</header>' +
           '<figure class="story__figure">' +
             '<img src="assets/img/' + esc(story.image || categoryTile(story.category)) + '" alt="Illustration for ' + esc(story.title) + '" width="1200" height="620">' +
