@@ -4,7 +4,7 @@
 **Source:** <https://github.com/Ahmadmuz/culture-swap-wall>
 
 A working front-end prototype of the Culture Swap Wall concept described in
-`output/Culture_Swap_Wall_Project_Report.pdf`. It is a static site: no build
+`assets/docs/Culture_Swap_Wall_Project_Report.pdf`. It is a static site: no build
 step, no server code, no external requests, no accounts.
 
 > **Demonstration content only.** Every story, name and illustration is
@@ -17,7 +17,7 @@ step, no server code, no external requests, no accounts.
 The site opens directly from disk:
 
 ```bash
-open website/index.html            # macOS
+open index.html                    # macOS
 # or double-click index.html
 ```
 
@@ -25,7 +25,6 @@ For a more realistic environment (and for reliable local storage), serve the
 folder over HTTP:
 
 ```bash
-cd website
 python3 -m http.server 8080
 # then open http://localhost:8080
 ```
@@ -70,7 +69,7 @@ browser session.
 ## Project structure
 
 ```
-website/
+. (repository root)
   index.html                  page shell, header, footer, dialog
   assets/css/styles.css       design system, responsive and print styles
   assets/js/data.js           fictional stories, categories, regions, prompts
