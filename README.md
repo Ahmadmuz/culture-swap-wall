@@ -1,5 +1,8 @@
 # Culture Swap Wall — website prototype
 
+**Live site:** <https://ahmadmuz.github.io/culture-swap-wall/>  
+**Source:** <https://github.com/Ahmadmuz/culture-swap-wall>
+
 A working front-end prototype of the Culture Swap Wall concept described in
 `output/Culture_Swap_Wall_Project_Report.pdf`. It is a static site: no build
 step, no server code, no external requests, no accounts.

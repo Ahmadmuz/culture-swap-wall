@@ -652,7 +652,7 @@
         '</section>' +
         '<section class="section split">' +
           '<div><p class="eyebrow">Limitations</p><h2>What this prototype is not</h2><ul class="check-list check-list--muted"><li>Not a live service: no accounts, uploads, email or server.</li><li>Not moderated in reality: the queue is a local demonstration.</li><li>Not tested with students in this build.</li><li>Not a representative sample of cultures: eight fictional stories.</li><li>Not a replacement for professional safeguarding or legal review.</li></ul></div>' +
-          '<div class="aside-card aside-card--soft"><p class="eyebrow">Project report</p><h2 class="h-sm">The document behind this site</h2><p class="small">The report sets out the research, the Design Thinking process, the feature-selection matrix, the safety workflow, the implementation plan and the evaluation framework. This website implements the design decisions recorded there.</p><a class="btn btn--ghost btn--sm" href="assets/docs/Culture_Swap_Wall_Report.pdf" download>Download the report (PDF)</a></div>' +
+          '<div class="aside-card aside-card--soft"><p class="eyebrow">Project report</p><h2 class="h-sm">The document behind this site</h2><p class="small">The report sets out the research, the Design Thinking process, the feature-selection matrix, the safety workflow, the implementation plan and the evaluation framework. This website implements the design decisions recorded there.</p><a class="btn btn--ghost btn--sm" href="assets/docs/Culture_Swap_Wall_Project_Report.pdf" download>Download the report (PDF)</a></div>' +
         '</section>'
     };
   };
