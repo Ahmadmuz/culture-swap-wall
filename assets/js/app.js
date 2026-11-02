@@ -370,7 +370,7 @@
             '</div>' +
             '<aside class="story__aside">' +
               '<div class="aside-card">' +
-                '<h2 class="h-sm">Keep this story</h2>' +
+                '<h2 class="h-sm">Report a problem</h2>' +
                 '<button class="btn btn--ghost btn--block" type="button" data-action="report" data-id="' + esc(story.id) + '">Report this story</button>' +
                 '<p class="small">Reports go to the moderation queue in this demonstration. Nothing is sent anywhere.</p>' +
               '</div>' +

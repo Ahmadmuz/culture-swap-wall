@@ -67,7 +67,6 @@ Other behaviour:
   assets/js/app.js            router, views, state, interactions
   assets/img/*.svg            logo, favicon and abstract story covers
   assets/docs/…report.pdf     downloadable copy of the project report
-  tools/build_report.py       rebuilds the submission report (.docx)
 ```
 
 Editing content: change `assets/js/data.js`. Adding a story requires the fields
