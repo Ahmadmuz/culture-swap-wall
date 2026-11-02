@@ -256,39 +256,6 @@ window.CSW.stories = [
   }
 ];
 
-window.CSW.pendingDemo = [
-  {
-    id: "demo-mango-pickle",
-    title: "A recipe for mango pickle",
-    category: "food",
-    region: "South Asia",
-    author: "Demo contributor",
-    summary: "A family recipe with a photograph of a handwritten recipe card.",
-    submitted: "2026-10-16T09:20:00",
-    flags: ["Photograph of a handwritten recipe card", "Consent confirmed for the image"],
-    status: "pending",
-    story: {
-      id: "demo-mango-pickle",
-      title: "A recipe for mango pickle",
-      category: "food",
-      region: "South Asia",
-      author: "Demo contributor",
-      authorNote: "Demonstration author",
-      summary: "My mother's mango pickle, written on the back of an old card.",
-      context: [
-        "The recipe is written on the back of a card in my mother's handwriting, with amounts crossed out and replaced. She makes it once a year, when the mangoes are cheap, and gives jars to people who helped us during the year.",
-        "The card is not the original. The original was lost, and this version was copied from memory, which is why one line says \u2018ask Aunty about the fenugreek\u2019."
-      ],
-      means: "The card is a record of a year's work and of the people my mother wants to thank.",
-      understand: "That a recipe can be a working document and a record of obligation, not just instructions.",
-      assumptions: "Please do not assume this is a standard recipe. Every family's pickle is different, and mine is not the definitive version.",
-      image: "tile-cat-food.svg",
-      readingTime: "2 min",
-      community: true
-    }
-  }
-];
-
 window.CSW.regions = [
   { id: "west-asia", label: "West Asia", note: "One family's tea ritual." },
   { id: "west-africa", label: "West Africa", note: "A repaired drum and a first rhythm." },

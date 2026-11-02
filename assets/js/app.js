@@ -46,7 +46,6 @@
   /* ---------------------------------------------------------------- store */
   var KEYS = {
     community: "csw.community",
-    saved: "csw.saved",
     bridge: "csw.bridge",
     reports: "csw.reports",
     queue: "csw.queue",
@@ -76,18 +75,14 @@
 
   var state = {
     community: read(KEYS.community, []),
-    saved: read(KEYS.saved, []),
     bridge: read(KEYS.bridge, {}),
     reports: read(KEYS.reports, []),
-    queue: read(KEYS.queue, CSW.pendingDemo.slice()),
+    queue: read(KEYS.queue, []),
     route: "",
     filters: { q: "", category: "all", region: "all", sort: "curated" },
     submit: null,
     bridgeStep: 1,
     bridgeDraft: {},
-    atlasRegion: null,
-    modUnlocked: false,
-    modTab: "queue"
   };
 
   function allStories() {
@@ -99,7 +94,6 @@
   function approvedReports() {
     return state.reports.filter(function (r) { return r.status === "open"; });
   }
-  function isSaved(id) { return state.saved.indexOf(id) !== -1; }
 
   /* ------------------------------------------------------------- chrome */
   var toastTimer = null;
@@ -145,7 +139,6 @@
   /* ------------------------------------------------------------ fragments */
   function storyCard(story) {
     var cat = categoryOf(story.category);
-    var saved = isSaved(story.id);
     return (
       '<article class="story-card" data-category="' + esc(story.category) + '">' +
         '<a class="story-card__link" href="#/story/' + esc(story.id) + '">' +
@@ -161,9 +154,6 @@
             '<p class="story-card__author">Shared by ' + esc(story.author) + (story.community ? ' <span class="pill pill--new">Community</span>' : '') + '</p>' +
           '</div>' +
         '</a>' +
-        '<button class="save-btn" type="button" data-action="save" data-id="' + esc(story.id) + '" aria-pressed="' + saved + '" aria-label="' + (saved ? "Remove from saved stories: " : "Save story: ") + esc(story.title) + '">' +
-          '<svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path d="M6 3.75h12a1.25 1.25 0 0 1 1.25 1.25v15.25L12 16.4l-7.25 3.85V5A1.25 1.25 0 0 1 6 3.75Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>' +
-        '</button>' +
       '</article>'
     );
   }
@@ -381,7 +371,6 @@
             '<aside class="story__aside">' +
               '<div class="aside-card">' +
                 '<h2 class="h-sm">Keep this story</h2>' +
-                '<button class="btn btn--ghost btn--block" type="button" data-action="save" data-id="' + esc(story.id) + '" aria-pressed="' + isSaved(story.id) + '">' + (isSaved(story.id) ? "Saved \u2713" : "Save to my wall") + '</button>' +
                 '<button class="btn btn--ghost btn--block" type="button" data-action="report" data-id="' + esc(story.id) + '">Report this story</button>' +
                 '<p class="small">Reports go to the moderation queue in this demonstration. Nothing is sent anywhere.</p>' +
               '</div>' +
@@ -476,44 +465,6 @@
     };
   };
 
-  views.atlas = function () {
-    var counts = {};
-    allStories().forEach(function (s) { counts[s.region] = (counts[s.region] || 0) + 1; });
-    var cells = CSW.regions.map(function (r, i) {
-      var n = counts[r.label] || 0;
-      var active = state.atlasRegion === r.label;
-      return '<button class="atlas-cell atlas-cell--' + (i % 4) + (active ? " is-active" : "") + '" type="button" data-action="atlas" data-region="' + esc(r.label) + '" aria-pressed="' + active + '">' +
-        '<span class="atlas-cell__dot" aria-hidden="true"></span>' +
-        '<span class="atlas-cell__name">' + esc(r.label) + '</span>' +
-        '<span class="atlas-cell__count">' + n + ' ' + (n === 1 ? "story" : "stories") + '</span>' +
-      '</button>';
-    }).join("");
-
-    var detail = "";
-    if (state.atlasRegion) {
-      var list = allStories().filter(function (s) { return s.region === state.atlasRegion; });
-      detail = '<div class="atlas-detail" id="atlas-detail"><h2 tabindex="-1">' + esc(state.atlasRegion) + '</h2>' +
-        '<p>' + esc((CSW.regions.filter(function (r) { return r.label === state.atlasRegion; })[0] || {}).note || "") + '</p>' +
-        '<div class="story-grid story-grid--compact">' + list.map(storyCard).join("") + '</div></div>';
-    }
-
-    return {
-      title: "Culture atlas",
-      html:
-        '<section class="page-head"><p class="eyebrow">Places, not pins</p><h1>Culture atlas</h1>' +
-        '<p class="lede">A regional board instead of a geographic map. Precise pins imply that a practice belongs to an exact point on a map, which is rarely true and can expose contributors. This board is fully keyboard accessible and does not ask anyone to locate themselves. Every story shown is fictional demonstration content.</p></section>' +
-        '<div class="atlas">' +
-          '<div class="atlas-board" role="group" aria-label="Regions with shared stories">' + cells + '</div>' +
-          '<div class="atlas-side">' +
-            '<div class="aside-card"><h2 class="h-sm">How to read this</h2><p class="small">Each region lists stories shared by people who chose that label themselves. Regions are deliberately broad. A story about one family does not describe everyone in a region, and the interface says so on every story.</p>' +
-            '<p class="small">An interactive world map was considered and rejected for the prototype: it adds geographic precision without adding understanding, and it is harder to use with a keyboard or screen reader.</p></div>' +
-            '<div class="aside-card aside-card--soft"><h2 class="h-sm">Missing a region?</h2><p class="small">The board only shows regions represented on the wall. Submitting a story adds it.</p><a class="link-arrow" href="#/submit">Submit a story \u2192</a></div>' +
-          '</div>' +
-        '</div>' +
-        detail
-    };
-  };
-
   views.submit = function () {
     if (!state.submit) {
       state.submit = { step: 1, data: { title: "", category: "food", region: "Oceania", context: "", means: "", understand: "", assumptions: "", consentOwn: false, consentImage: false, image: "" } };
@@ -566,7 +517,7 @@
           '<h2>Queued for human review</h2>' +
           '<p>Your story is now in the demonstration moderation queue on this device. Nothing has been sent to a server and nothing will appear on the public wall automatically.</p>' +
           '<div class="queue-note"><p><strong>What happens next in a live version</strong></p><ol class="numbered"><li>A moderator reads the story against the published guidelines.</li><li>They may ask you to add context, confirm consent, or change a detail.</li><li>If approved, it appears on the wall with your chosen name.</li><li>You can withdraw it at any time.</li></ol></div>' +
-          '<div class="hero__actions"><a class="btn btn--primary" href="#/moderation">Open the moderation demo</a><a class="btn btn--ghost" href="#/wall">Back to the wall</a></div>' +
+          '<div class="hero__actions"><a class="btn btn--primary" href="#/safety">How review works</a><a class="btn btn--ghost" href="#/wall">Back to the wall</a></div>' +
         '</div>';
     }
 
@@ -620,10 +571,10 @@
           '<h2>Report something</h2>' +
           '<p>If a story contains harassment, a stereotype presented as fact, private information or content that is not the contributor\u2019s to share, report it. Reports are reviewed by a person.</p>' +
           '<button class="btn btn--primary" type="button" data-action="report" data-id="">Open the report form</button>' +
-          '<p class="small">' + open + ' open report' + (open === 1 ? "" : "s") + ' in this demonstration. The moderation view is password-protected by a visible demo code.</p>' +
+          '<p class="small">' + open + ' open report' + (open === 1 ? "" : "s") + ' in this demonstration.</p>' +
         '</div>' +
         '<aside class="prose-aside"><div class="aside-card"><h2 class="h-sm">Safety at a glance</h2><ul class="mini-list"><li><strong>Human review</strong> before publication</li><li><strong>No public comments</strong> \u2014 guided prompts instead</li><li><strong>Report</strong> on every story</li><li><strong>Consent</strong> confirmed at submission</li><li><strong>Withdrawal</strong> at any time</li><li><strong>No follower counts</strong> or rankings</li></ul></div>' +
-        '<div class="aside-card aside-card--soft"><h2 class="h-sm">For a teacher or judge</h2><p class="small">The moderation demonstration shows the queue, the automated warning, and the approve/return decision. The code is printed on that page so the workflow can be inspected.</p><a class="link-arrow" href="#/moderation">Open moderation \u2192</a></div></aside></div>'
+        '</aside></div>'
     };
   };
 
@@ -656,62 +607,6 @@
           '<div><p class="eyebrow">Limitations</p><h2>What this prototype is not</h2><ul class="check-list check-list--muted"><li>Not a live service: no accounts, uploads, email or server.</li><li>Not moderated in reality: the queue is a local demonstration.</li><li>Not tested with students in this build.</li><li>Not a representative sample of cultures: eight fictional stories.</li><li>Not a replacement for professional safeguarding or legal review.</li></ul></div>' +
           '<div class="aside-card aside-card--soft"><p class="eyebrow">Project report</p><h2 class="h-sm">The document behind this site</h2><p class="small">The report sets out the research, the Design Thinking process, the feature-selection matrix, the safety workflow, the implementation plan and the evaluation framework. This website implements the design decisions recorded there.</p><a class="btn btn--ghost btn--sm" href="assets/docs/Culture_Swap_Wall_Project_Report.pdf" download>Download the report (PDF)</a></div>' +
         '</section>'
-    };
-  };
-
-  views.saved = function () {
-    var list = allStories().filter(function (s) { return isSaved(s.id); });
-    return {
-      title: "Saved stories",
-      html:
-        '<section class="page-head"><p class="eyebrow">Your collection</p><h1>Saved stories</h1><p class="lede">Kept in this browser only. Nothing is synced or shared.</p></section>' +
-        (list.length ? '<h2 class="sr-only">Your saved stories</h2><div class="story-grid">' + list.map(storyCard).join("") + '</div>' : emptyState("Nothing saved yet", "Use the bookmark on any story to keep it here.", '<a class="btn btn--primary btn--sm" href="#/wall">Browse the wall</a>'))
-    };
-  };
-
-  views.moderation = function () {
-    if (!state.modUnlocked) {
-      return {
-        title: "Moderation demo",
-        html:
-          '<section class="page-head"><p class="eyebrow">Restricted demonstration</p><h1>Moderation queue</h1>' +
-          '<p class="lede">This view shows how a human reviewer would handle submissions and reports. It is protected by a code that is deliberately visible, because this is a demonstration and not a security boundary.</p></section>' +
-          '<div class="mod-lock"><form id="mod-form"><label for="mod-code">Demo access code</label><div class="mod-lock__row"><input id="mod-code" type="text" autocomplete="off" placeholder="Enter code"><button class="btn btn--primary" type="submit">Unlock</button></div><p class="field__hint">The code is <code>wall2026</code>.</p><p class="form-error" id="mod-error" role="alert"></p></form></div>'
-      };
-    }
-    var queue = state.queue.filter(function (q) { return q.status === "pending"; });
-    var reports = state.reports;
-    var tab = state.modTab;
-    var content = "";
-    if (tab === "queue") {
-      content = queue.length ? queue.map(function (item) {
-        return '<article class="mod-card">' +
-          '<div class="mod-card__head"><div><p class="story-card__meta">' + esc(categoryOf(item.category).label) + ' \u00b7 ' + esc(item.region) + ' \u00b7 ' + dateLabel(item.submitted) + ' ' + timeLabel(item.submitted) + '</p><h2>' + esc(item.title) + '</h2><p class="small">Submitted by ' + esc(item.author) + '</p></div><span class="pill pill--warn">Pending</span></div>' +
-          '<p>' + esc(item.summary) + '</p>' +
-          '<ul class="flag-list">' + (item.flags || []).map(function (f) { return '<li>' + esc(f) + '</li>'; }).join("") + '</ul>' +
-          '<div class="mod-card__actions"><button class="btn btn--primary btn--sm" type="button" data-action="mod-approve" data-id="' + esc(item.id) + '">Approve and publish</button><button class="btn btn--ghost btn--sm" type="button" data-action="mod-return" data-id="' + esc(item.id) + '">Return for changes</button></div>' +
-        '</article>';
-      }).join("") : emptyState("The queue is clear", "New submissions from the submission form will appear here.", "");
-    } else if (tab === "reports") {
-      content = reports.length ? reports.map(function (r) {
-        return '<article class="mod-card"><div class="mod-card__head"><div><p class="story-card__meta">' + esc(r.reason) + ' \u00b7 ' + dateLabel(r.created) + '</p><h2>' + esc(r.storyTitle || "General report") + '</h2><p class="small">' + esc(r.details || "No additional details.") + '</p></div><span class="pill pill--warn">' + esc(r.status) + '</span></div>' +
-          '<div class="mod-card__actions"><button class="btn btn--primary btn--sm" type="button" data-action="mod-resolve" data-id="' + esc(r.id) + '">Mark resolved</button></div></article>';
-      }).join("") : emptyState("No open reports", "Reports submitted from a story page or the safety page appear here.", "");
-    } else {
-      content = '<div class="aside-card"><h2 class="h-sm">Decision log</h2><p class="small">In a live version every decision would record the reviewer, the reason, the timestamp and the contributor\u2019s response. This prototype keeps no such log, because it is not a real service.</p></div>';
-    }
-
-    return {
-      title: "Moderation demo",
-      html:
-        '<section class="page-head"><p class="eyebrow">Restricted demonstration</p><h1>Moderation queue</h1>' +
-        '<p class="lede">A human reviewer reads every submission. The automated check below is advisory only.</p></section>' +
-        '<div class="mod-bar"><div class="tabs" role="group" aria-label="Moderation sections">' +
-          '<button aria-pressed="' + (tab === "queue") + '" class="' + (tab === "queue" ? "is-active" : "") + '" type="button" data-action="mod-tab" data-tab="queue">Queue <span class="count">' + queue.length + '</span></button>' +
-          '<button aria-pressed="' + (tab === "reports") + '" class="' + (tab === "reports" ? "is-active" : "") + '" type="button" data-action="mod-tab" data-tab="reports">Reports <span class="count">' + reports.filter(function (r) { return r.status === "open"; }).length + '</span></button>' +
-          '<button aria-pressed="' + (tab === "log") + '" class="' + (tab === "log" ? "is-active" : "") + '" type="button" data-action="mod-tab" data-tab="log">About this view</button>' +
-        '</div><button class="btn btn--ghost btn--sm" type="button" data-action="mod-lock">Lock</button></div>' +
-        '<div class="mod-list">' + content + '</div>'
     };
   };
 
@@ -875,24 +770,6 @@
         }
         break;
       }
-      case "save": {
-        var id = el.getAttribute("data-id");
-        if (isSaved(id)) {
-          state.saved = state.saved.filter(function (x) { return x !== id; });
-          toast("Removed from your saved stories.");
-        } else {
-          state.saved.push(id);
-          toast("Saved. Find it under Saved in the menu.");
-        }
-        write(KEYS.saved, state.saved);
-        $$('[data-action="save"][data-id="' + id + '"]').forEach(function (btn) {
-          var on = isSaved(id);
-          btn.setAttribute("aria-pressed", String(on));
-          btn.innerHTML = btn.classList.contains("btn") ? (on ? "Saved \u2713" : "Save to my wall") : btn.innerHTML;
-        });
-        if (state.route === "saved") render();
-        break;
-      }
       case "filter-category": {
         state.filters.category = el.getAttribute("data-value");
         $$('[data-action="filter-category"]').forEach(function (btn) {
@@ -981,20 +858,6 @@
         window.location.hash = "#/story/" + bid;
         break;
       }
-      case "atlas": {
-        var region = el.getAttribute("data-region");
-        state.atlasRegion = state.atlasRegion === region ? null : region;
-        render();
-        var detailHeading = $("#atlas-detail h2");
-        if (detailHeading) {
-          detailHeading.focus({ preventScroll: true });
-          detailHeading.scrollIntoView({ behavior: "smooth", block: "start" });
-        } else {
-          var activeCell = $('.atlas-cell[data-region="' + region.replace(/"/g, '\\"') + '"]');
-          if (activeCell) activeCell.focus();
-        }
-        break;
-      }
       case "submit-back": if (state.submit) state.submit.step = 1; render(); break;
       case "submit-send": {
         var mark = $("#s-truth");
@@ -1038,39 +901,6 @@
         write(KEYS.queue, state.queue);
         try { window.sessionStorage.setItem("csw.lastSubmission", JSON.stringify(record)); } catch (e) { /* ignore */ }
         state.submit.step = 3;
-        render();
-        break;
-      }
-      case "mod-lock": state.modUnlocked = false; render(); break;
-      case "mod-tab": state.modTab = el.getAttribute("data-tab"); render(); break;
-      case "mod-approve": {
-        var item = state.queue.filter(function (q) { return q.id === el.getAttribute("data-id"); })[0];
-        if (!item) return;
-        item.status = "approved";
-        if (item.story) {
-          state.community.unshift(item.story);
-          write(KEYS.community, state.community);
-        }
-        write(KEYS.queue, state.queue);
-        toast("Approved. " + (item.story ? "The story is now on the wall." : "Demo story marked approved."));
-        render();
-        break;
-      }
-      case "mod-return": {
-        var ret = state.queue.filter(function (q) { return q.id === el.getAttribute("data-id"); })[0];
-        if (!ret) return;
-        ret.status = "returned";
-        write(KEYS.queue, state.queue);
-        toast("Returned to the contributor with a request for changes.");
-        render();
-        break;
-      }
-      case "mod-resolve": {
-        var rep = state.reports.filter(function (r) { return r.id === el.getAttribute("data-id"); })[0];
-        if (!rep) return;
-        rep.status = "resolved";
-        write(KEYS.reports, state.reports);
-        toast("Report marked resolved.");
         render();
         break;
       }
@@ -1120,16 +950,6 @@
         if (err) err.textContent = "";
         state.submit.step = 2;
         render();
-      } else if (event.target.id === "mod-form") {
-        event.preventDefault();
-        var code = ($("#mod-code") || {}).value || "";
-        if (code.trim() === "wall2026") {
-          state.modUnlocked = true;
-          render();
-        } else {
-          var merr = $("#mod-error");
-          if (merr) merr.textContent = "That code is not correct. The demo code is wall2026.";
-        }
       } else if (event.target.id === "report-form") {
         event.preventDefault();
       }

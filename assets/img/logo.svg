@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="280 140 640 640" width="640" height="640" role="img" aria-label="Two speech bubbles exchanging arrows above a brick wall">
+  <defs>
+    <path id="lens" d="M600 200 C690 235 705 300 705 365 C705 435 685 490 600 530 C515 490 495 435 495 365 C495 300 510 235 600 200 Z"/>
+    <clipPath id="rightHalf"><rect x="600" y="150" width="400" height="500"/></clipPath>
+    <g id="arrow">
+      <path d="M-63.9 -23.3 A68 68 0 0 1 30 -61" fill="none" stroke="#5C4630" stroke-width="22" stroke-linecap="round"/>
+      <polygon points="49.6,-49.9 42.5,-73.6 25.5,-44.2" fill="#5C4630" stroke="#5C4630" stroke-width="8" stroke-linejoin="round"/>
+    </g>
+  </defs>
+
+  <!-- Bubble fills -->
+  <path d="M600 175 H407 Q317 175 317 265 V440 Q317 520 392 545 V590 L468 543 H600 Z" fill="#FFFFFF"/>
+  <path d="M600 175 H793 Q883 175 883 265 V440 Q883 520 808 545 V590 L732 543 H600 Z" fill="#E0BC5B"/>
+
+  <!-- Bubble outlines -->
+  <g fill="none" stroke="#5C4630" stroke-width="34" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M600 175 H407 Q317 175 317 265 V440 Q317 520 392 545 V590 L468 543 H600"/>
+    <path d="M600 175 H793 Q883 175 883 265 V440 Q883 520 808 545 V590 L732 543 H600"/>
+  </g>
+
+  <!-- Overlap lens: white left half, gold right half -->
+  <use href="#lens" fill="#FFFFFF"/>
+  <use href="#lens" fill="#E0BC5B" clip-path="url(#rightHalf)"/>
+  <use href="#lens" fill="none" stroke="#5C4630" stroke-width="30" stroke-linejoin="round"/>
+
+  <!-- Exchange arrows -->
+  <g transform="translate(600 365)">
+    <use href="#arrow"/>
+    <use href="#arrow" transform="rotate(120)"/>
+    <use href="#arrow" transform="rotate(240)"/>
+  </g>
+
+  <!-- Brick wall -->
+  <g fill="#5C4630">
+    <rect x="310" y="583" width="48" height="42" rx="4"/>
+    <rect x="440" y="583" width="80" height="42" rx="4"/>
+    <rect x="540" y="583" width="122" height="42" rx="4"/>
+    <rect x="682" y="583" width="70" height="42" rx="4"/>
+    <rect x="845" y="583" width="45" height="42" rx="4"/>
+    <rect x="310" y="645" width="140" height="45" rx="4"/>
+    <rect x="470" y="645" width="120" height="45" rx="4"/>
+    <rect x="610" y="645" width="120" height="45" rx="4"/>
+    <rect x="750" y="645" width="140" height="45" rx="4"/>
+    <path d="M310 708 H385 V755 H340 Q310 755 310 725 Z"/>
+    <rect x="403" y="708" width="117" height="47" rx="4"/>
+    <rect x="538" y="708" width="124" height="47" rx="4"/>
+    <rect x="681" y="708" width="117" height="47" rx="4"/>
+    <path d="M818 708 H890 V725 Q890 755 860 755 H818 Z"/>
+  </g>
+</svg>
